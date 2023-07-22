@@ -6,14 +6,17 @@ const cookieParser = require("cookie-parser"); // it is middware and use syntax 
 const fs = require("fs");
 const multer = require("multer");
 
-// Routes
-
 require("dotenv").config();
 
 const app = express();
 
 app.use(express.json()); // return data according to format json
 app.use(cookieParser());
+
+// Routes
+const userRoutes = require("./Routes/user.routes");
+
+app.use("/user", userRoutes);
 
 app.use(
   cors({
