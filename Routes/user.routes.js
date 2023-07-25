@@ -1,24 +1,47 @@
 /**
  * @swagger
  * components:
- *  schemas:
- *      Users:
- *          type: object
- *          required:
- *              - name
- *              - email
- *              - password
- *          properties:
- *              name:
- *                  type: string
- *                  description: name is yourname
- *              email:
- *                  type: string
- *                  description: email is unique
- *              password:
- *                  type: string
- *                  description: password is yourpassword
- *
+ *   schemas:
+ *     Users:
+ *       type: object
+ *       required:
+ *         - name
+ *         - email
+ *         - password
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: name is yourname
+ *         email:
+ *           type: string
+ *           description: email is unique, required
+ *         password:
+ *           type: string
+ *           description: password is required
+ *     Login:
+ *       type: object
+ *       required:
+ *         - email
+ *         - password
+ *       properties:
+ *         email:
+ *           type: string
+ *           description: email is required
+ *         password:
+ *           type: string
+ *           description: password is required
+ *     Updated:
+ *       type: object
+ *       required:
+ *         - name
+ *         - password
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: name is required
+ *         password:
+ *           type: string
+ *           description: password is required
  */
 
 /**
@@ -58,7 +81,60 @@
  *               $ref: '#/components/schemas/Users'
  *       500:
  *         description: Some server error
- *
+ * /user/login:
+ *   post:
+ *    summary: Login account
+ *    tags: [Users]
+ *    requestBody:
+ *       required: true
+ *       content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Login'
+ *    responses:
+ *      200:
+ *        description: The login user
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Login'
+ *      500:
+ *        description: Some server error
+ * /user/update-user/{userid}:
+ *  put:
+ *     summary: Update a user by ID
+ *     tags: [Users]
+ *     parameters:
+ *      - name: UserId
+ *        in: path
+ *        description: ID of user to edit
+ *        required: true
+ *        schema:
+ *          type: string
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Users'
+ * /user/delete-user/{UserId}:
+ *  delete:
+ *     summary: Delete a user by ID
+ *     tags: [Users]
+ *     parameters:
+ *       - name: UserId
+ *         in: path
+ *         description: ID of the user to delete
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Some server error
  */
 
 const express = require("express");
@@ -73,6 +149,13 @@ router.get("/get-user", userController.getUser);
 // Register
 router.post("/register", userController.register);
 
+// Update User
+router.put("/update-user/:UserId", userController.updateUser);
+
+// Delete
+router.delete("/delete-user/:UserId", userController.deleteUser);
+
 // Login
+router.post("/login", userController.login);
 
 module.exports = router;
