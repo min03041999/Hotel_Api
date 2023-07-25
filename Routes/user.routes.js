@@ -100,7 +100,7 @@
  *              $ref: '#/components/schemas/Login'
  *      500:
  *        description: Some server error
- * /user/update-user/{userid}:
+ * /user/update-user/{UserId}:
  *  put:
  *     summary: Update a user by ID
  *     tags: [Users]
@@ -116,7 +116,14 @@
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Users'
+ *              $ref: '#/components/schemas/Updated'
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Some server error
  * /user/delete-user/{UserId}:
  *  delete:
  *     summary: Delete a user by ID

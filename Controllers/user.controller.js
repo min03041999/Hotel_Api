@@ -53,11 +53,11 @@ exports.register = async (req, res, next) => {
 
 // Update
 exports.updateUser = async (req, res, next) => {
-  const { userId } = req.params.UserId;
+  const userId = req.params.UserId;
   const { name, password } = req.body;
 
   if (userId) {
-    const updatedUser = await User.findByIdAndUpdate(userID, {
+    const updatedUser = await User.findByIdAndUpdate(userId, {
       name,
       password: bcrypt.hashSync(password, bcryptjs),
     });
