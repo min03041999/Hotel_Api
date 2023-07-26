@@ -1,4 +1,5 @@
 const User = require("../Models/user.models");
+const generateTokens = require("../utils/generateTokens");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const bcryptjs = bcrypt.genSaltSync(10); // bcrypt data => using for password
@@ -103,21 +104,12 @@ exports.login = async (req, res, next) => {
     const isEqual = bcrypt.compareSync(password, user.password);
 
     if (isEqual) {
-      const token = jwt.sign(
-        {
-          id: user._id,
-          email: user.email,
-          name: user.name,
-        },
-        jwtSecret,
-        {
-          expiresIn: "1h",
-        }
-      );
+      const { accessToken, refreshToken } = await generateTokens(user);
 
       res.status(201).json({
         message: "Login is successful",
-        token: token,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
       });
     } else {
       res.status(401).json({
@@ -130,3 +122,5 @@ exports.login = async (req, res, next) => {
     });
   }
 };
+
+exports.refreshToken = async (req, res, next) => {};

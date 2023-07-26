@@ -1,20 +1,18 @@
 const express = require("express");
 const mongoose = require("mongoose"); // store mongodb
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const fs = require("fs");
+const multer = require("multer");
+require("dotenv").config();
 
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUI = require("swagger-ui-express");
 
-const cors = require("cors");
-const cookieParser = require("cookie-parser"); // it is middware and use syntax anlysis
-const fs = require("fs");
-const multer = require("multer");
-
-require("dotenv").config();
-
 const app = express();
 
 app.use(express.json()); // return data according to format json
-app.use(cookieParser());
+app.use(cookieParser()); // use cookie
 
 // Swagger UI
 const options = {
@@ -45,21 +43,12 @@ app.use("/user", userRoutes);
 app.use(
   cors({
     credentials: true,
-    origin: "http://192.168.18.2",
+    origin: "*",
+    methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
   })
-); // allow access address ip 192.168.18.2 source app
+);
 
 const port = 3000;
-
-app.get("/test", (req, res) => {
-  res.json({
-    message: "Data is successful",
-    data: {
-      title: "Xin chào",
-      name: "A Min",
-    },
-  });
-});
 
 mongoose
   .connect(
