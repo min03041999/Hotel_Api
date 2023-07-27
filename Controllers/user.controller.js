@@ -1,9 +1,10 @@
 const User = require("../Models/user.models");
+const UserToken = require("../Models/userToken.models");
 const generateTokens = require("../utils/generateTokens");
+const verifyRefreshTokens = require("../utils/verifyRefreshTokens");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const bcryptjs = bcrypt.genSaltSync(10); // bcrypt data => using for password
-const jwtSecret = "somesupersecretsecret";
 
 // Get User
 exports.getUser = async (req, res, next) => {
@@ -123,4 +124,54 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.refreshToken = async (req, res, next) => {};
+// RefreshToken
+exports.refreshToken = async (req, res, next) => {
+  const refreshToken = req.body.token;
+
+  verifyRefreshTokens(refreshToken)
+    .then(({ tokenDetails }) => {
+      const payload = {
+        id: tokenDetails.id,
+        name: tokenDetails.name,
+        email: tokenDetails.email,
+      };
+
+      const accessToken = jwt.sign(
+        payload,
+        process.env.ACCESS_TOKEN_PRIVATE_KEY,
+        { expiresIn: "14m" }
+      );
+
+      res.status(201).json({
+        message: "Access token created successfully",
+        accessToken,
+      });
+    })
+    .catch((err) => {
+      res.status(401).json(err);
+    });
+};
+
+//logout
+exports.logout = async (req, res, next) => {
+  const token = req.res.token;
+
+  try {
+    const findToken = await UserToken.findOne({ token: token });
+
+    if (!findToken)
+      return res.status(200).json({
+        message: "Logged Out successfully",
+      });
+
+    await UserToken.deleteOne({ token: token });
+
+    res.status(200).json({
+      message: "Logged Out successfully",
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error Server",
+    });
+  }
+};
