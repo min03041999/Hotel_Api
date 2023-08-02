@@ -2,8 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose"); // store mongodb
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const fs = require("fs");
-const multer = require("multer");
 require("dotenv").config();
 
 const swaggerJSDoc = require("swagger-jsdoc");
@@ -13,6 +11,7 @@ const app = express();
 
 app.use(express.json()); // return data according to format json
 app.use(cookieParser()); // use cookie
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 // Swagger UI
 const options = {

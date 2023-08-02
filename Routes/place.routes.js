@@ -12,6 +12,37 @@
  *     responses:
  *       200:
  *         description: The list of the Places
+ * /place/upload-place:
+ *   post:
+ *     summary: Upload multiple images for a place
+ *     tags: [Places]
+ *     security:
+ *       - x-access-token: []
+ *     requestBody:
+ *        content:
+ *          multipart/form-data:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                photos:
+ *                  type: array
+ *                  items:
+ *                    type: string
+ *                    format: binary
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ * /place/upload-by-links-place:
+ *  post:
+ *    summary: Upload by links for a place
+ *    tags: [Places]
+ *    security:
+ *      - x-access-token: []
+ *    requestBody:
  * /place/add-place:
  *   post:
  *     summary: Add a new place
@@ -107,13 +138,24 @@
  */
 
 const express = require("express");
+const multer = require("multer");
 
 const placeController = require("../Controllers/place.controller");
 const isAuth = require("../Middleware/is-auth");
+const photoMiddleware = multer({ dest: "uploads/" });
 
 const router = express.Router();
 
 router.get("/get-place", isAuth, placeController.places);
+
+// router.post("/upload-by-link-place", isAuth, placeController.uploadByLinks);
+
+router.post(
+  "/upload-place",
+  photoMiddleware.array("photos", 100),
+  isAuth,
+  placeController.uploadPlace
+);
 
 router.post("/add-place", isAuth, placeController.addPlace);
 
