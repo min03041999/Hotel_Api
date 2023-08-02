@@ -44,7 +44,7 @@ exports.register = async (req, res, next) => {
     } else {
       res
         .status(401)
-        .json({ message: "Email is existed", user: { email: email } });
+        .json({ message: "Email is not existed", user: { email: email } });
     }
   } catch (error) {
     res.status(500).json({
@@ -119,7 +119,7 @@ exports.login = async (req, res, next) => {
     }
   } else {
     res.status(401).json({
-      message: "Your email is exist",
+      message: "Your email is not exist",
     });
   }
 };

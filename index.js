@@ -2,8 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose"); // store mongodb
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const fs = require("fs");
-const multer = require("multer");
 require("dotenv").config();
 
 const swaggerJSDoc = require("swagger-jsdoc");
@@ -13,6 +11,7 @@ const app = express();
 
 app.use(express.json()); // return data according to format json
 app.use(cookieParser()); // use cookie
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 // Swagger UI
 const options = {
@@ -21,6 +20,21 @@ const options = {
     info: {
       title: "Node JS API Project for mongodb",
       version: "1.0",
+    },
+    components: {
+      securitySchemes: {
+        "x-access-token": {
+          type: "http",
+          in: "header",
+          name: "x-access-token",
+          description: "JWT Token",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: {
+      "x-access-token": [],
     },
     servers: [
       {
@@ -37,14 +51,17 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 // Routes
 const userRoutes = require("./Routes/user.routes");
+const placeRoutes = require("./Routes/place.routes");
 
 app.use("/user", userRoutes);
+app.use("/place", placeRoutes);
 
 app.use(
   cors({
     credentials: true,
     origin: "*",
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-access-token"],
   })
 );
 
