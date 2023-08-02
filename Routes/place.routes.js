@@ -84,6 +84,26 @@
  *         description: The created Place
  *       500:
  *         description: Error Server
+ * /place/delete-place/{PlaceId}:
+ *   delete:
+ *     summary: Delete a place
+ *     tags: [Places]
+ *     parameters:
+ *       - name: PlaceId
+ *         in: path
+ *         description: ID for the place to delete
+ *         required: true
+ *         schema:
+ *           type: string
+ *     security:
+ *       - x-access-token: []
+ *     responses:
+ *       200:
+ *         description: Place deleted successfully
+ *       401:
+ *         description: Place not found
+ *       500:
+ *         description: Server error
  */
 
 const express = require("express");
@@ -96,5 +116,9 @@ const router = express.Router();
 router.get("/get-place", isAuth, placeController.places);
 
 router.post("/add-place", isAuth, placeController.addPlace);
+
+router.post("/edit-place/:PlaceId", isAuth, placeController.editPlace);
+
+router.delete("/delete-place/:PlaceId", isAuth, placeController.deletePlace);
 
 module.exports = router;
