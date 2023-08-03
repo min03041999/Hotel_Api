@@ -49,7 +49,7 @@ exports.uploadByLinks = async (req, res, next) => {
     // responseType: "stream" trả về dữ liệu dưới dạng luồng "stream" thay vì trả về JSON hoặc string
     const response = await axios.get(link, { responseType: "stream" });
     const imagePath = path.join(__dirname, "../uploads", newName);
-    console.log(imagePath);
+    // console.log(imagePath);
     const writer = fs.createWriteStream(imagePath);
     response.data.pipe(writer);
     writer.on("finish", () => {
