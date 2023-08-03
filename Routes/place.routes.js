@@ -36,13 +36,25 @@
  *         description: Bad request
  *       401:
  *         description: Unauthorized
- * /place/upload-by-links-place:
+ * /place/upload-by-link-place:
  *  post:
  *    summary: Upload by links for a place
  *    tags: [Places]
  *    security:
  *      - x-access-token: []
  *    requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               link:
+ *                 type: string
+ *                 description: The link image of the Place
+ *                 example: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRHWWgosTRnCpYlg_mHzQJlgisF6zDyoChepZW71-yew&s
+ *    responses:
+ *      200:
+ *        description: OK
  * /place/add-place:
  *   post:
  *     summary: Add a new place
@@ -148,7 +160,7 @@ const router = express.Router();
 
 router.get("/get-place", isAuth, placeController.places);
 
-// router.post("/upload-by-link-place", isAuth, placeController.uploadByLinks);
+router.post("/upload-by-link-place", isAuth, placeController.uploadByLinks);
 
 router.post(
   "/upload-place",
