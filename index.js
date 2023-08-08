@@ -52,9 +52,11 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 // Routes
 const userRoutes = require("./Routes/user.routes");
 const placeRoutes = require("./Routes/place.routes");
+const bookingRoutes = require("./Routes/booking.routes");
 
 app.use("/user", userRoutes);
 app.use("/place", placeRoutes);
+app.use("/booking", bookingRoutes);
 
 app.use(
   cors({
