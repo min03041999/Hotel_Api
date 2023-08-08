@@ -11,11 +11,20 @@
  *       - x-access-token: []
  *     responses:
  *       200:
- *         Fetched booking successfully
+ *         description: The list of the Booking
  *       401:
- *         Data is error
+ *         description: Data error
  *       500:
- *         Server Error
+ *         description: Server error
+ * /booking/get-booking/{BookingId}:
+ *   get:
+ *     summary: Show all information the Booking ID of the hotel
+ *     tags: [Booking]
+ *     security:
+ *       - x-access-token: []
+ *     responses:
+ *       200:
+ *         description: Booking is successfully
  * /booking/add-booking:
  *   post:
  *     summary: Booking of the hotel
@@ -64,6 +73,23 @@
  *         description: Your booking is fail
  *       500:
  *         description: Server Error
+ * /booking/cancel-booking/{BookingId}:
+ *   delete:
+ *     summary: Cancel booking of the hotel
+ *     tags: [Booking]
+ *     security:
+ *       - x-access-token: []
+ *     parameters:
+ *       - name: BookingId
+ *         in: path
+ *         description: ID for the booking to delete
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Booking is cancel successfully
+ *
  */
 
 const express = require("express");
@@ -75,6 +101,14 @@ const router = express.Router();
 
 router.get("/get-booking", isAuth, bookingController.getBooking);
 
+router.get("/get-booking/:BookingId", isAuth, bookingController.getBookingId);
+
 router.post("/add-booking", isAuth, bookingController.addBooking);
+
+router.delete(
+  "/cancel-booking/:BookingId",
+  isAuth,
+  bookingController.cancelBooking
+);
 
 module.exports = router;
