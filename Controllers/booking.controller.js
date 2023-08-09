@@ -56,12 +56,49 @@ exports.addBooking = async (req, res, next) => {
   }
 };
 
+exports.updateBooking = async (req, res, next) => {
+  try {
+    const BookingId = req.params.BookingId;
+    const UserId = req.UserId;
+
+    const { place, checkIn, checkOut, numberOfGuests, name, phone, price } =
+      req.body;
+
+    const findBookingId = await Booking.findBookingId({
+      _id: BookingId,
+      user: UserId,
+    });
+
+    if (!findBookingId) return res.status(401).json({ message: "Not Find" });
+
+    const updateBooking = await Booking.updateOne(
+      { _id: BookingId, user: UserId },
+      {
+        place,
+        checkIn,
+        checkOut,
+        numberOfGuests,
+        name,
+        phone,
+        price,
+      }
+    );
+
+    res.status(200).json({
+      message: "Update successfully",
+      updateBooking: updateBooking,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 exports.cancelBooking = async (req, res, next) => {
   try {
     const BookingId = req.params.BookingId;
     const UserId = req.UserId;
 
-    const findBookingId = await BookingId.findBookingId({
+    const findBookingId = await Booking.findBookingId({
       _id: BookingId,
       user: UserId,
     });

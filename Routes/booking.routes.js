@@ -105,6 +105,12 @@ router.get("/get-booking/:BookingId", isAuth, bookingController.getBookingId);
 
 router.post("/add-booking", isAuth, bookingController.addBooking);
 
+router.put(
+  "/update-booking/:BookingId",
+  isAuth,
+  bookingController.updateBooking
+);
+
 router.delete(
   "/cancel-booking/:BookingId",
   isAuth,
